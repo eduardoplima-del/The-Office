@@ -1,6 +1,10 @@
+-- ============================================================================
+-- SCRIPT SQL CONSOLIDADO - THE OFFICE PAPELARIA (REGRAS RN01 A RN16)
+-- ============================================================================
+
 BEGIN;
 
--- Criação das tabelas caso ainda não existam
+-- 1. Criação das tabelas principais (caso ainda não existam)
 CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(120) NOT NULL,
@@ -35,14 +39,14 @@ CREATE TABLE IF NOT EXISTS pedido_itens (
     preco_unitario NUMERIC(10, 2) NOT NULL
 );
 
--- Garantia de colunas em bases já existentes
+-- 2. Garantia de colunas essenciais em bases já existentes
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS tipo VARCHAR(20) NOT NULL DEFAULT 'cliente';
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS situacao INTEGER NOT NULL DEFAULT 1;
 ALTER TABLE produtos ADD COLUMN IF NOT EXISTS imagem_url TEXT DEFAULT '/IMG/Landing/placeholder.png';
 ALTER TABLE produtos ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT true;
 ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS criado_em TIMESTAMP NOT NULL DEFAULT NOW();
 
--- Saneamento de dados existentes
+-- 3. Saneamento de registros existentes antes de aplicar as restrições
 UPDATE usuarios SET situacao = 1 WHERE situacao IS NULL;
 UPDATE usuarios SET tipo = 'cliente' WHERE tipo IS NULL OR tipo NOT IN ('admin', 'cliente');
 UPDATE produtos SET ativo = true WHERE ativo IS NULL;
@@ -50,7 +54,7 @@ UPDATE produtos SET estoque = 0 WHERE estoque IS NULL OR estoque < 0;
 UPDATE produtos SET preco = 0 WHERE preco IS NULL OR preco < 0;
 UPDATE pedidos SET status = 'pendente' WHERE status IS NULL OR status NOT IN ('pendente', 'pago', 'enviado', 'cancelado');
 
--- Constraints RN01–RN16
+-- 4. Regras de Usuários (RN01, RN02, RN03)
 ALTER TABLE usuarios
     ALTER COLUMN nome SET NOT NULL,
     ALTER COLUMN email SET NOT NULL,
@@ -62,6 +66,7 @@ ALTER TABLE usuarios
     DROP CONSTRAINT IF EXISTS chk_situacao_usuario,
     ADD CONSTRAINT chk_situacao_usuario CHECK (situacao IN (0, 1));
 
+-- 5. Regras de Produtos e Estoque (RN04, RN05, RN06)
 ALTER TABLE produtos
     ALTER COLUMN nome SET NOT NULL,
     ALTER COLUMN preco SET NOT NULL,
@@ -72,6 +77,7 @@ ALTER TABLE produtos
     DROP CONSTRAINT IF EXISTS chk_preco_nao_negativo,
     ADD CONSTRAINT chk_preco_nao_negativo CHECK (preco >= 0);
 
+-- 6. Regras de Pedidos (RN07, RN08, RN09, RN10, RN13, RN16)
 ALTER TABLE pedidos
     ALTER COLUMN usuario_id SET NOT NULL,
     ALTER COLUMN total SET NOT NULL,
@@ -82,6 +88,7 @@ ALTER TABLE pedidos
     DROP CONSTRAINT IF EXISTS chk_status_pedido,
     ADD CONSTRAINT chk_status_pedido CHECK (status IN ('pendente', 'pago', 'enviado', 'cancelado'));
 
+-- 7. Regras de Itens do Pedido (RN11, RN12, RN14, RN15)
 ALTER TABLE pedido_itens
     ALTER COLUMN pedido_id SET NOT NULL,
     ALTER COLUMN produto_id SET NOT NULL,
