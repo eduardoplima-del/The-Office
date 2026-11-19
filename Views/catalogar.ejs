@@ -3,58 +3,252 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Gerenciar Produtos - Papelaria</title>
-    <link rel="stylesheet" href="/CSS/estilos.pt.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque e Produtos - The Office Papelaria</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/CSS/catalogar.pt.css">
 </head>
 
 <body>
-    <a href="/dashboard">&larr; Voltar ao Painel</a>
-    <h2>Controle de Estoque e Produtos</h2>
 
-    <form action="/produtos/novo" method="POST" class="form-cadastro">
-        <h3>Cadastrar Produto</h3>
-        <input type="text" name="nome" placeholder="Nome do Produto" required>
-        <input type="number" step="0.01" name="preco" placeholder="Preço (R$)" required>
-        <input type="number" name="estoque" placeholder="Quantidade em Estoque" required>
-        <input type="text" name="imagem_url" placeholder="URL da Imagem">
-        <button type="submit">Cadastrar Produto</button>
-    </form>
+    <header class="top-header">
+        <div class="header-inner">
+            <div class="logo">
+                <a href="/"><img src="/IMG/Landing/logo.png" alt="The Office Papelaria"></a>
+            </div>
 
-    <hr>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/#sobre">Sobre nós</a></li>
+                    <li><a href="/catalogo">Produtos</a></li>
+                </ul>
+            </nav>
 
-    <h3>Produtos Cadastrados</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Produto</th>
-                <th>Preço</th>
-                <th>Estoque</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% produtos.forEach(p=> { %>
-                <tr>
-                    <td>
-                        <%= p.id %>
-                    </td>
-                    <td>
-                        <%= p.nome %>
-                    </td>
-                    <td>
-                        <%= moeda(p.preco) %>
-                    </td>
-                    <td>
-                        <%= p.estoque %> un
-                    </td>
-                    <td>
-                        <%= p.ativo ? 'Ativo' : 'Inativo' %>
-                    </td>
-                </tr>
-                <% }) %>
-        </tbody>
-    </table>
+            <div class="header-right">
+                <div class="header-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Buscar na loja..." onkeyup="document.getElementById('buscaTabela').value = this.value; aplicarFiltros();">
+                </div>
+
+                <div class="header-icons">
+                    <a href="/dashboard" title="Painel Admin"><i class="bi bi-person"></i></a>
+                    <a href="/carrinho" class="cart-btn" title="Carrinho">
+                        <i class="bi bi-cart3"></i>
+                        <span class="cart-badge"><%= typeof qtdCarrinho !== 'undefined' ? qtdCarrinho : 0 %></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <div class="title-header">
+            <div class="title-texts">
+                <h1>Controle de Estoque e Produtos</h1>
+                <p>Gerencie o estoque dos seus produtos de forma simples e organizada.</p>
+            </div>
+            <button type="button" class="btn-novo-produto" onclick="toggleCadastro()">+ Novo Produto</button>
+        </div>
+
+        <% if (typeof erro !== 'undefined' && erro) { %>
+            <div class="alert-error">
+                <i class="bi bi-exclamation-triangle-fill"></i> <%= erro %>
+            </div>
+        <% } %>
+
+        <section class="cadastro-card" id="boxCadastro" style="display: none;">
+            <form action="/produtos/novo" method="POST" class="form-cadastro">
+                <input type="text" name="nome" placeholder="Nome do Produto" required>
+                <input type="number" step="0.01" min="0" name="preco" placeholder="Preço (R$)" required>
+                <input type="number" min="0" name="estoque" placeholder="Quantidade em Estoque" required>
+                <input type="text" name="imagem_url" placeholder="URL da Imagem (ex: /IMG/Landing/...)">
+                <button type="submit">Salvar Produto</button>
+            </form>
+        </section>
+
+        <section class="filters-bar">
+            <div class="pills-group">
+                <button type="button" class="pill-btn active" onclick="selecionarFiltro('todos', this)">Todos os Produtos</button>
+                <button type="button" class="pill-btn" onclick="selecionarFiltro('em-estoque', this)">Em Estoque</button>
+                <button type="button" class="pill-btn" onclick="selecionarFiltro('estoque-baixo', this)">Estoque Baixo</button>
+                <button type="button" class="pill-btn" onclick="selecionarFiltro('sem-estoque', this)">Sem Estoque</button>
+            </div>
+
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" id="buscaTabela" placeholder="Buscar produto..." onkeyup="aplicarFiltros()">
+            </div>
+        </section>
+
+        <section class="table-card">
+            <div class="table-wrapper">
+                <table id="tabelaProdutos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Produto</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (produtos && produtos.length > 0) { %>
+                            <% produtos.forEach(p => { 
+                                let statusClass = 'em-estoque';
+                                let statusLabel = 'Em estoque';
+
+                                if (!p.ativo || p.estoque <= 0) {
+                                    statusClass = 'sem-estoque';
+                                    statusLabel = !p.ativo ? 'Inativo' : 'Sem estoque';
+                                } else if (p.estoque <= 5) {
+                                    statusClass = 'estoque-baixo';
+                                    statusLabel = 'Estoque Baixo';
+                                }
+                            %>
+                                <tr data-status="<%= statusClass %>" data-nome="<%= p.nome.toLowerCase() %>">
+                                    <td class="col-id"><%= p.id %></td>
+
+                                    <td>
+                                        <div class="product-info">
+                                            <div class="product-thumb">
+                                                <img src="<%= p.imagem_url || '/IMG/Landing/placeholder.png' %>" alt="<%= p.nome %>">
+                                            </div>
+                                            <span class="product-name"><%= p.nome %></span>
+                                        </div>
+                                    </td>
+
+                                    <td class="col-price"><%= moeda(p.preco) %></td>
+
+                                    <td class="col-stock"><%= p.estoque %> un</td>
+
+                                    <td>
+                                        <span class="badge-status <%= statusClass %>">
+                                            <span class="status-dot"></span> <%= statusLabel %>
+                                        </span>
+                                    </td>
+
+                                    <td class="col-actions">
+                                        <div class="actions-wrapper">
+                                            <a href="/produtos/editar/<%= p.id %>" class="action-icon" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="/produtos/excluir/<%= p.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Deseja excluir este produto?');">
+                                                <button type="submit" class="action-icon delete" title="Excluir">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: #777;">
+                                    Nenhum produto cadastrado.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <span id="contadorProdutos">Mostrando 1–<%= produtos ? produtos.length : 0 %> de <%= produtos ? produtos.length : 0 %> produtos</span>
+                <div class="pagination-controls" id="paginacaoContainer"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        let statusAtivo = 'todos';
+        let paginaAtual = 1;
+        const itensPorPagina = 8;
+
+        function toggleCadastro() {
+            const box = document.getElementById('boxCadastro');
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function selecionarFiltro(status, btn) {
+            statusAtivo = status;
+            paginaAtual = 1;
+            document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            aplicarFiltros();
+        }
+
+        function aplicarFiltros() {
+            const termo = document.getElementById('buscaTabela').value.toLowerCase();
+            const todasLinhas = Array.from(document.querySelectorAll('#tabelaProdutos tbody tr[data-status]'));
+
+            const linhasFiltradas = todasLinhas.filter(linha => {
+                const st = linha.getAttribute('data-status');
+                const nm = linha.getAttribute('data-nome');
+                const okStatus = (statusAtivo === 'todos') || (st === statusAtivo);
+                const okNome = nm.includes(termo);
+                return okStatus && okNome;
+            });
+
+            const total = linhasFiltradas.length;
+            const totalPaginas = Math.max(1, Math.ceil(total / itensPorPagina));
+            if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
+
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+
+            todasLinhas.forEach(l => l.style.display = 'none');
+            linhasFiltradas.slice(inicio, fim).forEach(l => l.style.display = '');
+
+            const mostradoInicio = total === 0 ? 0 : inicio + 1;
+            const mostradoFim = Math.min(fim, total);
+            document.getElementById('contadorProdutos').textContent =
+                `Mostrando ${mostradoInicio}–${mostradoFim} de ${total} produtos`;
+
+            renderizarPaginacao(totalPaginas);
+        }
+
+        function renderizarPaginacao(totalPaginas) {
+            const container = document.getElementById('paginacaoContainer');
+            container.innerHTML = '';
+
+            const btnAnt = document.createElement('button');
+            btnAnt.type = 'button';
+            btnAnt.className = 'page-btn nav-text';
+            btnAnt.innerHTML = '&lsaquo; Anterior';
+            btnAnt.disabled = paginaAtual === 1;
+            btnAnt.onclick = () => { paginaAtual--; aplicarFiltros(); };
+            container.appendChild(btnAnt);
+
+            for (let i = 1; i <= totalPaginas; i++) {
+                const btnNum = document.createElement('button');
+                btnNum.type = 'button';
+                btnNum.className = 'page-btn' + (i === paginaAtual ? ' active' : '');
+                btnNum.textContent = i;
+                btnNum.onclick = () => { paginaAtual = i; aplicarFiltros(); };
+                container.appendChild(btnNum);
+            }
+
+            const btnProx = document.createElement('button');
+            btnProx.type = 'button';
+            btnProx.className = 'page-btn nav-text';
+            btnProx.innerHTML = 'Próximo &rsaquo;';
+            btnProx.disabled = paginaAtual === totalPaginas;
+            btnProx.onclick = () => { paginaAtual++; aplicarFiltros(); };
+            container.appendChild(btnProx);
+        }
+
+        window.addEventListener('DOMContentLoaded', aplicarFiltros);
+    </script>
+
 </body>
-
 </html>

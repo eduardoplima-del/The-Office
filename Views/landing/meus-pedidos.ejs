@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Pedidos - The Office Papelaria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #ebe5d8; font-family: 'Poppins', sans-serif; color: #1a1a1a; margin: 0; }
+        .top-header { background-color: #f7f3e8; border-bottom: 1px solid #e4decb; padding: 0.75rem 0; }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .logo img { height: 40px; display: block; }
+        .main-nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0; }
+        .main-nav a { text-decoration: none; color: #2b2b2b; font-size: 0.88rem; font-weight: 500; }
+        .container { max-width: 980px; margin: 2rem auto 4rem auto; padding: 0 2rem; }
+        .order-card { background: #faf7f0; border-radius: 20px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid #e6dfd0; }
+        .order-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ebe4d5; padding-bottom: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem; }
+        .status-pill { padding: 0.25rem 0.75rem; border-radius: 14px; font-size: 0.78rem; font-weight: 600; text-transform: capitalize; background: #fef3c7; color: #92400e; }
+        .status-pill.pago, .status-pill.enviado { background: #d1fae5; color: #065f46; }
+        .status-pill.cancelado { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+
+<body>
+    <header class="top-header">
+        <div class="header-inner">
+            <div class="logo"><a href="/"><img src="/IMG/Landing/logo.png" alt="The Office Papelaria"></a></div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/catalogo">Produtos</a></li>
+                    <li><a href="/carrinho">Carrinho (<%= qtdCarrinho %>)</a></li>
+                    <li><a href="/logout">Sair</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 style="font-size: 1.65rem; margin-bottom: 0.3rem;">Meus Pedidos</h1>
+        <p style="font-size: 0.88rem; color: #555; margin-bottom: 1.5rem;">Acompanhe o histórico e o status das suas compras.</p>
+
+        <% if (typeof sucesso !== 'undefined' && sucesso) { %>
+            <div style="background:#d1fae5; color:#065f46; padding:0.9rem 1.2rem; border-radius:14px; margin-bottom:1.2rem; font-size:0.86rem; font-weight:600;">
+                <i class="bi bi-check-circle-fill"></i> Pedido realizado com sucesso!
+            </div>
+        <% } %>
+
+        <% if (pedidos && pedidos.length > 0) { %>
+            <% pedidos.forEach(pedido => { %>
+                <div class="order-card">
+                    <div class="order-top">
+                        <div>
+                            <strong>Pedido #<%= pedido.id %></strong>
+                            <span style="font-size: 0.8rem; color: #666; margin-left: 0.8rem;">
+                                <%= new Date(pedido.criado_em).toLocaleDateString('pt-BR') %>
+                            </span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <span class="status-pill <%= pedido.status %>"><%= pedido.status %></span>
+                            <strong><%= moeda(pedido.total) %></strong>
+                        </div>
+                    </div>
+                    <% if (pedido.itens && pedido.itens.length > 0) { %>
+                        <% pedido.itens.forEach(it => { %>
+                            <div style="display:flex; justify-content:space-between; font-size:0.86rem; padding:0.35rem 0;">
+                                <span><%= it.quantidade %>x <%= it.nome %></span>
+                                <span><%= moeda(it.preco_unitario * it.quantidade) %></span>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="order-card" style="text-align:center; padding:2.5rem;">
+                <p style="color:#666; margin-bottom:1rem;">Você ainda não realizou nenhum pedido.</p>
+                <a href="/catalogo" style="background:#f6c95c; color:#1a1a1a; padding:0.65rem 1.6rem; border-radius:20px; text-decoration:none; font-weight:600; font-size:0.85rem;">Ir para a loja</a>
+            </div>
+        <% } %>
+    </main>
+</body>
+</html>

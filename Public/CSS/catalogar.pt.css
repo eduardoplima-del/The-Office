@@ -1,0 +1,541 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #ebe5d8;
+    font-family: 'Poppins', sans-serif;
+    color: #1a1a1a;
+    min-height: 100vh;
+}
+
+/* ==================== CABEÇALHO SUPERIOR ==================== */
+.top-header {
+    background-color: #f7f3e8;
+    border-bottom: 1px solid #e4decb;
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.logo img {
+    height: 42px;
+    width: auto;
+    display: block;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #2b2b2b;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.main-nav a:hover {
+    color: #d9a438;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.header-search {
+    display: flex;
+    align-items: center;
+    background-color: #ebe5d8;
+    padding: 0.48rem 1.1rem;
+    border-radius: 22px;
+    gap: 0.55rem;
+}
+
+.header-search i {
+    color: #555555;
+    font-size: 0.85rem;
+}
+
+.header-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #333333;
+    width: 165px;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.header-icons a {
+    color: #1a1a1a;
+    font-size: 1.25rem;
+    text-decoration: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -9px;
+    background-color: #f6c95c;
+    color: #1a1a1a;
+    font-size: 0.65rem;
+    font-weight: 700;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==================== CONTAINER PRINCIPAL ==================== */
+.main-container {
+    max-width: 1120px;
+    margin: 2.4rem auto 4rem auto;
+    padding: 0 2rem;
+}
+
+.title-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.title-texts h1 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.25rem;
+}
+
+.title-texts p {
+    font-size: 0.88rem;
+    color: #4a4a4a;
+}
+
+.btn-novo-produto {
+    background-color: #f6c95c;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 22px;
+    padding: 0.58rem 1.25rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(246, 201, 92, 0.3);
+    transition: background-color 0.2s;
+}
+
+.btn-novo-produto:hover {
+    background-color: #e8b845;
+}
+
+.alert-error {
+    background-color: #fed7d7;
+    color: #822727;
+    padding: 0.85rem 1.2rem;
+    border-radius: 14px;
+    margin-bottom: 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ==================== FORMULÁRIO DE NOVO PRODUTO ==================== */
+.cadastro-card {
+    background-color: #faf7f0;
+    border: 1px solid #e6dfd0;
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.4rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.form-cadastro {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.6fr auto;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.form-cadastro input {
+    width: 100%;
+    background-color: #f3eee3;
+    border: 1px solid #e2dccb;
+    border-radius: 12px;
+    padding: 0.6rem 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    color: #1a1a1a;
+    outline: none;
+}
+
+.form-cadastro input:focus {
+    border-color: #f6c95c;
+    background-color: #ffffff;
+}
+
+.form-cadastro button {
+    background-color: #f6c95c;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 12px;
+    padding: 0.62rem 1.25rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ==================== BARRA DE FILTROS E BUSCA ==================== */
+.filters-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+    flex-wrap: wrap;
+}
+
+.pills-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.pill-btn {
+    background-color: #faf7f0;
+    border: none;
+    color: #1a1a1a;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.55rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s;
+}
+
+.pill-btn:hover {
+    background-color: #f2ece0;
+}
+
+.pill-btn.active {
+    background-color: #f6c95c;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #faf7f0;
+    border-radius: 22px;
+    padding: 0.55rem 1.15rem;
+    gap: 0.55rem;
+    min-width: 245px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.search-box i {
+    color: #333333;
+    font-size: 0.9rem;
+}
+
+.search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #1a1a1a;
+    width: 100%;
+}
+
+/* ==================== CARD E TABELA ==================== */
+.table-card {
+    background-color: #faf7f0;
+    border-radius: 22px;
+    padding: 0.4rem 1.5rem 0.6rem 1.5rem;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.03);
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+thead tr {
+    border-bottom: 1px solid #e7e1d4;
+}
+
+thead th {
+    padding: 1.05rem 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ede7db;
+    transition: background-color 0.15s;
+}
+
+tbody tr:hover {
+    background-color: #f5f0e4;
+}
+
+tbody td {
+    padding: 0.72rem 0.75rem;
+    font-size: 0.84rem;
+    color: #2b2b2b;
+    vertical-align: middle;
+}
+
+.col-id {
+    font-weight: 500;
+    color: #2b2b2b;
+    width: 65px;
+    padding-left: 1rem;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.product-thumb {
+    width: 44px;
+    height: 44px;
+    background-color: #ede7db;
+    border-radius: 10px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.product-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-name {
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.col-price {
+    font-weight: 500;
+    color: #2b2b2b;
+    white-space: nowrap;
+}
+
+.col-stock {
+    font-weight: 500;
+    color: #2b2b2b;
+    white-space: nowrap;
+}
+
+/* ==================== PÍLULAS DE STATUS ==================== */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: 14px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.badge-status.em-estoque {
+    background-color: #d6edd9;
+    color: #2e6b3e;
+}
+
+.badge-status.em-estoque .status-dot {
+    background-color: #388e4c;
+}
+
+.badge-status.estoque-baixo {
+    background-color: #f8e3b4;
+    color: #8f6014;
+}
+
+.badge-status.estoque-baixo .status-dot {
+    background-color: #d98218;
+}
+
+.badge-status.sem-estoque {
+    background-color: #f7d4d4;
+    color: #9e2a2b;
+}
+
+.badge-status.sem-estoque .status-dot {
+    background-color: #c93b3b;
+}
+
+/* ==================== CAIXINHAS DE AÇÃO (LÁPIS E LIXEIRA) ==================== */
+.col-actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.actions-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+}
+
+.action-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #dfd8c8;
+    background-color: #f6f2e9;
+    color: #2b2b2b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-icon:hover {
+    background-color: #f6c95c;
+    border-color: #f6c95c;
+    color: #1a1a1a;
+}
+
+.action-icon.delete:hover {
+    background-color: #f7d4d4;
+    border-color: #e5a3a3;
+    color: #9e2a2b;
+}
+
+/* ==================== RODAPÉ E PAGINAÇÃO ==================== */
+.table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.05rem 0.75rem 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #333333;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.page-btn {
+    border: none;
+    background-color: transparent;
+    color: #2b2b2b;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #ede7db;
+}
+
+.page-btn.active {
+    background-color: #f6c95c;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.page-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
+@media (max-width: 900px) {
+    .form-cadastro {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .form-cadastro button {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 640px) {
+    .header-search {
+        display: none;
+    }
+
+    .form-cadastro {
+        grid-template-columns: 1fr;
+    }
+
+    .form-cadastro button {
+        grid-column: span 1;
+    }
+}
