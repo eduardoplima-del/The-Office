@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>The Office Papelaria</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,13 +14,10 @@
 </head>
 
 <body>
-
     <header>
         <div class="container">
             <div class="logo">
-                <a href="/">
-                    <img src="/IMG/Landing/logo.png" alt="Logo">
-                </a>
+                <a href="/"><img src="/IMG/Landing/logo.png" alt="Logo"></a>
             </div>
 
             <nav>
@@ -37,21 +32,13 @@
             </nav>
 
             <div class="header-icons">
-                <a href="/catalogo" title="Buscar produtos">
-                    <i class="bi bi-search"></i>
-                </a>
+                <a href="/catalogo" title="Buscar produtos"><i class="bi bi-search"></i></a>
 
                 <% if (usuario) { %>
-                    <a href="/meus-pedidos" title="Meus Pedidos">
-                        <i class="bi bi-person-fill"></i>
-                    </a>
-                    <a href="/logout" title="Sair" style="font-size: 0.9rem; margin-left: 5px;">
-                        <i class="bi bi-box-arrow-right"></i>
-                    </a>
+                    <a href="/meus-pedidos" title="Meus Pedidos"><i class="bi bi-person-fill"></i></a>
+                    <a href="/logout" title="Sair" style="font-size: 0.9rem; margin-left: 5px;"><i class="bi bi-box-arrow-right"></i></a>
                 <% } else { %>
-                    <a href="/login" title="Fazer Login">
-                        <i class="bi bi-person-fill"></i>
-                    </a>
+                    <a href="/login" title="Fazer Login"><i class="bi bi-person-fill"></i></a>
                 <% } %>
 
                 <a href="/carrinho" title="Carrinho" style="position: relative;">
@@ -69,26 +56,10 @@
     <section class="hero">
         <div class="container hero-content">
             <div class="hero-text">
-                <h1>
-                    Mais que papelaria,
-                    <br>
-                    é o seu espaço
-                    <br>
-                    de ideias.
-                </h1>
-
-                <p>
-                    Aqui você encontra tudo para deixar o
-                    seu dia a dia mais organizado,
-                    criativo e produtivo.
-                </p>
-
-                <a href="/catalogo" class="btn">
-                    Ver produtos
-                    <i class="bi bi-arrow-right"></i>
-                </a>
+                <h1>Mais que papelaria,<br>é o seu espaço<br>de ideias.</h1>
+                <p>Aqui você encontra tudo para deixar o seu dia a dia mais organizado, criativo e produtivo.</p>
+                <a href="/catalogo" class="btn">Ver produtos <i class="bi bi-arrow-right"></i></a>
             </div>
-
             <div class="hero-image">
                 <img src="/IMG/Landing/banner-produtos.png" alt="Produtos">
             </div>
@@ -99,30 +70,17 @@
         <div class="container">
             <div class="benefit">
                 <i class="bi bi-truck"></i>
-                <div>
-                    <h3>Envio rápido</h3>
-                    <p>Para todo o Brasil</p>
-                </div>
+                <div><h3>Envio rápido</h3><p>Para todo o Brasil</p></div>
             </div>
-
             <div class="divider"></div>
-
             <div class="benefit">
                 <i class="bi bi-heart-fill"></i>
-                <div>
-                    <h3>Produtos selecionados</h3>
-                    <p>Qualidade e estilo</p>
-                </div>
+                <div><h3>Produtos selecionados</h3><p>Qualidade e estilo</p></div>
             </div>
-
             <div class="divider"></div>
-
             <div class="benefit">
                 <i class="bi bi-check-circle-fill"></i>
-                <div>
-                    <h3>Compra segura</h3>
-                    <p>Dados protegidos</p>
-                </div>
+                <div><h3>Compra segura</h3><p>Dados protegidos</p></div>
             </div>
         </div>
     </section>
@@ -131,22 +89,9 @@
         <div class="container about-content">
             <div class="about-text">
                 <h2>Sobre nós</h2>
-                <p>
-                    A <strong>The Office Papelaria</strong> é uma empresa dedicada
-                    a oferecer produtos de papelaria,
-                    escritório e materiais escolares
-                    com qualidade, praticidade e ótimo
-                    custo-benefício.
-                </p>
-                <p>
-                    Nosso objetivo é atender estudantes,
-                    professores, profissionais e empresas,
-                    disponibilizando uma grande variedade
-                    de itens para facilitar o dia a dia
-                    e estimular a criatividade.
-                </p>
+                <p>A <strong>The Office Papelaria</strong> é uma empresa dedicada a oferecer produtos de papelaria, escritório e materiais escolares com qualidade, praticidade e ótimo custo-benefício.</p>
+                <p>Nosso objetivo é atender estudantes, professores, profissionais e empresas, disponibilizando uma grande variedade de itens para facilitar o dia a dia e estimular a criatividade.</p>
             </div>
-
             <div class="about-image">
                 <img src="/IMG/Landing/gato-livro.png" alt="Gato lendo">
             </div>
@@ -156,23 +101,16 @@
     <% if (!usuario) { %>
         <section class="login-section">
             <div class="container">
-                <a href="/login" class="btn login-btn">
-                    Fazer Login
-                    <i class="bi bi-arrow-right"></i>
-                </a>
+                <a href="/login" class="btn login-btn">Fazer Login <i class="bi bi-arrow-right"></i></a>
             </div>
         </section>
     <% } %>
 
     <footer>
         <div class="container">
-            <div class="footer-logo">
-                <img src="/IMG/Landing/logo.png" alt="The Office Papelaria">
-            </div>
+            <div class="footer-logo"><img src="/IMG/Landing/logo.png" alt="The Office Papelaria"></div>
             <p>© 2026 The Office Papelaria. Todos os direitos reservados.</p>
         </div>
     </footer>
-
 </body>
-
 </html>

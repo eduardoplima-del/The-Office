@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Produtos - The Office Papelaria</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,13 +15,10 @@
 </head>
 
 <body>
-
     <header>
         <div class="container">
             <div class="logo">
-                <a href="/">
-                    <img src="/IMG/Landing/logo.png" alt="Logo The Office Papelaria">
-                </a>
+                <a href="/"><img src="/IMG/Landing/logo.png" alt="Logo The Office Papelaria"></a>
             </div>
 
             <nav>
@@ -38,21 +33,13 @@
             </nav>
 
             <div class="header-icons">
-                <a href="/catalogo" title="Buscar produtos">
-                    <i class="bi bi-search"></i>
-                </a>
+                <a href="/catalogo" title="Buscar produtos"><i class="bi bi-search"></i></a>
 
                 <% if (usuario) { %>
-                    <a href="/meus-pedidos" title="Meus Pedidos">
-                        <i class="bi bi-person-fill"></i>
-                    </a>
-                    <a href="/logout" title="Sair" class="icon-logout">
-                        <i class="bi bi-box-arrow-right"></i>
-                    </a>
+                    <a href="/meus-pedidos" title="Meus Pedidos"><i class="bi bi-person-fill"></i></a>
+                    <a href="/logout" title="Sair" class="icon-logout"><i class="bi bi-box-arrow-right"></i></a>
                 <% } else { %>
-                    <a href="/login" title="Fazer Login">
-                        <i class="bi bi-person-fill"></i>
-                    </a>
+                    <a href="/login" title="Fazer Login"><i class="bi bi-person-fill"></i></a>
                 <% } %>
 
                 <a href="/carrinho" title="Carrinho" class="cart-wrapper">
@@ -67,40 +54,7 @@
 
     <main class="catalogo-main">
         <div class="container">
-
-            <% if (typeof produtosPorCategoria !== 'undefined' && Object.keys(produtosPorCategoria).length > 0) { %>
-                
-                <% for (let categoria in produtosPorCategoria) { %>
-                    <section class="categoria-secao">
-                        <h2 class="categoria-titulo"><%= categoria %></h2>
-                        
-                        <div class="produtos-grid">
-                            <% produtosPorCategoria[categoria].forEach(produto => { %>
-                                <div class="produto-card">
-                                    <div class="produto-img">
-                                        <img src="<%= produto.imagem_url || '/IMG/Landing/placeholder.png' %>" alt="<%= produto.nome %>">
-                                    </div>
-                                    <div class="produto-info">
-                                        <h3><%= produto.nome %></h3>
-                                        <p class="preco"><%= moeda(produto.preco) %></p>
-                                        <p class="estoque"><%= produto.estoque %> disponíveis</p>
-                                        <span class="status-badge <%= produto.ativo ? 'ativo' : 'inativo' %>">
-                                            <%= produto.ativo ? 'ativo' : 'inativo' %>
-                                        </span>
-                                        
-                                        <form action="/carrinho/adicionar" method="POST" class="form-add-carrinho">
-                                            <input type="hidden" name="produtoId" value="<%= produto.id %>">
-                                            <button type="submit" class="btn-comprar">Comprar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    </section>
-                <% } %>
-
-            <% } else if (typeof produtos !== 'undefined' && produtos.length > 0) { %>
-
+            <% if (typeof produtos !== 'undefined' && produtos.length > 0) { %>
                 <section class="categoria-secao">
                     <h2 class="categoria-titulo">Todos os Produtos</h2>
                     <div class="produtos-grid">
@@ -126,34 +80,24 @@
                         <% }) %>
                     </div>
                 </section>
-
             <% } else { %>
-                
                 <div class="empty-state-container">
                     <div class="empty-state-card">
                         <i class="bi bi-box-seam empty-icon"></i>
                         <h2>Nenhum produto cadastrado no momento</h2>
                         <p>Estamos atualizando nosso catálogo com novos itens de papelaria. Volte em breve para conferir!</p>
-                        <a href="/" class="btn-voltar-home">
-                            <i class="bi bi-house-door-fill"></i> Voltar para o início
-                        </a>
+                        <a href="/" class="btn-voltar-home"><i class="bi bi-house-door-fill"></i> Voltar para o início</a>
                     </div>
                 </div>
-
             <% } %>
-
         </div>
     </main>
 
     <footer>
         <div class="container">
-            <div class="footer-logo">
-                <img src="/IMG/Landing/logo.png" alt="The Office Papelaria">
-            </div>
+            <div class="footer-logo"><img src="/IMG/Landing/logo.png" alt="The Office Papelaria"></div>
             <p>© 2026 The Office Papelaria. Todos os direitos reservados.</p>
         </div>
     </footer>
-
 </body>
-
 </html>

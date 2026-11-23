@@ -5,33 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Painel de Controle de Vendas - The Office Papelaria</title>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Estilos -->
     <link rel="stylesheet" href="/CSS/estilos.pt.css">
     <link rel="stylesheet" href="/CSS/dashboard.pt.css">
 </head>
 
 <body>
-
-    <!-- ================================= -->
-    <!-- HEADER / NAVBAR -->
-    <!-- ================================= -->
     <header>
         <div class="container">
             <div class="logo">
-                <a href="/">
-                    <img src="/IMG/Landing/logo.png" alt="The Office Papelaria">
-                </a>
+                <a href="/"><img src="/IMG/Landing/logo.png" alt="The Office Papelaria"></a>
             </div>
 
             <nav>
@@ -59,12 +46,7 @@
         </div>
     </header>
 
-    <!-- ================================= -->
-    <!-- CONTEÚDO PRINCIPAL DO DASHBOARD -->
-    <!-- ================================= -->
     <main class="dashboard-container">
-
-        <!-- Header do Painel -->
         <div class="dashboard-header">
             <div class="welcome-text">
                 <h1>Controle de Vendas e Desempenho</h1>
@@ -75,7 +57,6 @@
             </a>
         </div>
 
-        <!-- Cards de Métricas (KPIs) -->
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div>
@@ -83,9 +64,7 @@
                     <div class="kpi-value"><%= moeda(totalVendas) %></div>
                     <div class="kpi-subtext">Soma de pedidos pagos</div>
                 </div>
-                <div class="kpi-icon vendas">
-                    <i class="bi bi-cash-stack"></i>
-                </div>
+                <div class="kpi-icon vendas"><i class="bi bi-cash-stack"></i></div>
             </div>
 
             <div class="kpi-card">
@@ -94,9 +73,7 @@
                     <div class="kpi-value"><%= totalPedidos %></div>
                     <div class="kpi-subtext">Registrados no sistema</div>
                 </div>
-                <div class="kpi-icon pedidos">
-                    <i class="bi bi-bag-check-fill"></i>
-                </div>
+                <div class="kpi-icon pedidos"><i class="bi bi-bag-check-fill"></i></div>
             </div>
 
             <div class="kpi-card">
@@ -105,9 +82,7 @@
                     <div class="kpi-value"><%= totalProdutos %></div>
                     <div class="kpi-subtext">Disponíveis na loja</div>
                 </div>
-                <div class="kpi-icon produtos">
-                    <i class="bi bi-box-seam-fill"></i>
-                </div>
+                <div class="kpi-icon produtos"><i class="bi bi-box-seam-fill"></i></div>
             </div>
 
             <div class="kpi-card">
@@ -116,16 +91,11 @@
                     <div class="kpi-value"><%= estoqueBaixo.length %></div>
                     <div class="kpi-subtext">Produtos com ≤ 5 un.</div>
                 </div>
-                <div class="kpi-icon alerta">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                </div>
+                <div class="kpi-icon alerta"><i class="bi bi-exclamation-triangle-fill"></i></div>
             </div>
         </div>
 
-        <!-- Grid Principal: Tabela de Status e Listas de Apoio -->
         <div class="dashboard-grid">
-
-            <!-- Tabela de Resumo dos Pedidos por Status -->
             <div class="dashboard-card">
                 <div class="card-header-flex">
                     <h2>Resumo de Pedidos por Status</h2>
@@ -143,11 +113,7 @@
                         <tbody>
                             <% pedidosStatus.forEach(item => { %>
                                 <tr>
-                                    <td>
-                                        <span class="order-status <%= item.status.toLowerCase() %>">
-                                            <%= item.status %>
-                                        </span>
-                                    </td>
+                                    <td><span class="order-status <%= item.status.toLowerCase() %>"><%= item.status %></span></td>
                                     <td><strong><%= item.total %></strong> pedido(s)</td>
                                 </tr>
                             <% }) %>
@@ -158,14 +124,9 @@
                 <% } %>
             </div>
 
-            <!-- Coluna Lateral: Mais Vendidos e Estoque Baixo -->
             <div class="side-lists">
-
-                <!-- Card: Mais Vendidos -->
                 <div class="dashboard-card">
-                    <div class="card-header-flex">
-                        <h2>Mais Vendidos</h2>
-                    </div>
+                    <div class="card-header-flex"><h2>Mais Vendidos</h2></div>
                     <div class="mini-item-list">
                         <% if (maisVendidos && maisVendidos.length > 0) { %>
                             <% maisVendidos.forEach(item => { %>
@@ -183,7 +144,6 @@
                     </div>
                 </div>
 
-                <!-- Card: Alerta de Estoque Baixo -->
                 <div class="dashboard-card">
                     <div class="card-header-flex">
                         <h2>Alerta de Estoque</h2>
@@ -205,25 +165,15 @@
                         <% } %>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </main>
 
-    <!-- ================================= -->
-    <!-- FOOTER -->
-    <!-- ================================= -->
     <footer>
         <div class="container">
-            <div class="footer-logo">
-                <img src="/IMG/Landing/logo.png" alt="The Office Papelaria">
-            </div>
+            <div class="footer-logo"><img src="/IMG/Landing/logo.png" alt="The Office Papelaria"></div>
             <p>© 2026 The Office Papelaria. Todos os direitos reservados.</p>
         </div>
     </footer>
-
 </body>
-
 </html>

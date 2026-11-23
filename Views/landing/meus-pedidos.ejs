@@ -20,14 +20,12 @@
         .order-card { background: #faf7f0; border-radius: 20px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid #e6dfd0; }
         .order-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ebe4d5; padding-bottom: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem; }
 
-        /* Tags de Status */
         .status-pill { padding: 0.28rem 0.85rem; border-radius: 14px; font-size: 0.78rem; font-weight: 600; text-transform: capitalize; display: inline-flex; align-items: center; gap: 0.35rem; }
         .status-pill.pendente { background: #fef3c7; color: #92400e; }
         .status-pill.pago { background: #dbeafe; color: #1e40af; }
         .status-pill.enviado { background: #d1fae5; color: #065f46; }
         .status-pill.cancelado { background: #fee2e2; color: #991b1b; }
 
-        /* Rodapé do Card com botão no canto inferior direito */
         .order-footer {
             display: flex;
             justify-content: flex-end;
@@ -85,7 +83,7 @@
 
         <% if (typeof excluido !== 'undefined' && excluido) { %>
             <div style="background:#fee2e2; color:#991b1b; padding:0.9rem 1.2rem; border-radius:14px; margin-bottom:1.2rem; font-size:0.86rem; font-weight:600;">
-                <i class="bi bi-trash3-fill"></i> Pedido excluído com sucesso!
+                <i class="bi bi-trash3-fill"></i> Pedido excluído e estoque devolvido com sucesso!
             </div>
         <% } %>
 
@@ -115,7 +113,7 @@
                     <% } %>
 
                     <div class="order-footer">
-                        <form action="/meus-pedidos/excluir/<%= pedido.id %>" method="POST" style="margin:0;" onsubmit="return confirm('Tem certeza que deseja excluir o Pedido #<%= pedido.id %>?');">
+                        <form action="/meus-pedidos/excluir/<%= pedido.id %>" method="POST" style="margin:0;" onsubmit="return confirm('Tem certeza que deseja excluir o Pedido #<%= pedido.id %>? Os itens voltarão para o estoque.');">
                             <button type="submit" class="btn-excluir-pedido" title="Excluir pedido">
                                 <i class="bi bi-trash3"></i> Excluir pedido
                             </button>

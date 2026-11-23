@@ -194,7 +194,7 @@ app.get('/carrinho', async (req, res) => {
     }
 });
 
-// Adicionar Produto ao Carrinho (RN05, RN12, RN14 - aceita produto_id e produtoId)
+// Adicionar Produto ao Carrinho (RN05, RN12, RN14)
 app.post('/carrinho/adicionar', async (req, res) => {
     const produtoId = parseInt(req.body.produto_id || req.body.produtoId, 10);
     const qtd = parseInt(req.body.quantidade, 10) || 1;
@@ -364,7 +364,6 @@ app.get('/meus-pedidos', exigirLogin, async (req, res) => {
     const usuarioId = req.session.usuario.id;
 
     try {
-        // Atualiza automaticamente no PostgreSQL conforme o tempo decorrido:
         // >= 20 min (1200s) -> 'pago' | >= 30 min (20 + 10 min = 1800s) -> 'enviado'
         await BD.query(`
             UPDATE pedidos
@@ -407,8 +406,8 @@ app.get('/meus-pedidos', exigirLogin, async (req, res) => {
     }
 });
 
-// Excluir Pedido do Cliente (Devolve estoque e remove do banco em transação)
-app.post('/meus-pedidos/excluir/:id', exigirLogin, async (req, res) => {
+// Excluir Pedido do Cliente (Devolve estoque para produtos e remove do banco)
+app.post(['/meus-pedidos/excluir/:id', '/pedidos/excluir/:id'], exigirLogin, async (req, res) => {
     const pedidoId = parseInt(req.params.id, 10);
     const usuarioId = req.session.usuario.id;
 
@@ -428,7 +427,6 @@ app.post('/meus-pedidos/excluir/:id', exigirLogin, async (req, res) => {
         if (pedidoRes.rows.length > 0) {
             const pedido = pedidoRes.rows[0];
 
-            // Se o pedido não estava cancelado, devolve os itens ao estoque
             if (pedido.status !== 'cancelado') {
                 const itensRes = await client.query(
                     'SELECT produto_id, quantidade FROM pedido_itens WHERE pedido_id = $1',
@@ -458,7 +456,7 @@ app.post('/meus-pedidos/excluir/:id', exigirLogin, async (req, res) => {
     }
 });
 
-// Alias de compatibilidade caso algum link antigo aponte para /pedidos/meus
+// Alias de compatibilidade
 app.get('/pedidos/meus', exigirLogin, (req, res) => {
     res.redirect('/meus-pedidos');
 });

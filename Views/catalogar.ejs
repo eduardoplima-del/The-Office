@@ -5,17 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Estoque e Produtos - The Office Papelaria</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <link rel="stylesheet" href="/CSS/catalogar.pt.css">
 </head>
 
 <body>
-
     <header class="top-header">
         <div class="header-inner">
             <div class="logo">
@@ -49,7 +46,6 @@
     </header>
 
     <main class="main-container">
-
         <div class="title-header">
             <div class="title-texts">
                 <h1>Controle de Estoque e Produtos</h1>
@@ -59,9 +55,7 @@
         </div>
 
         <% if (typeof erro !== 'undefined' && erro) { %>
-            <div class="alert-error">
-                <i class="bi bi-exclamation-triangle-fill"></i> <%= erro %>
-            </div>
+            <div class="alert-error"><i class="bi bi-exclamation-triangle-fill"></i> <%= erro %></div>
         <% } %>
 
         <section class="cadastro-card" id="boxCadastro" style="display: none;">
@@ -117,7 +111,6 @@
                             %>
                                 <tr data-status="<%= statusClass %>" data-nome="<%= p.nome.toLowerCase() %>">
                                     <td class="col-id"><%= p.id %></td>
-
                                     <td>
                                         <div class="product-info">
                                             <div class="product-thumb">
@@ -126,26 +119,18 @@
                                             <span class="product-name"><%= p.nome %></span>
                                         </div>
                                     </td>
-
                                     <td class="col-price"><%= moeda(p.preco) %></td>
-
                                     <td class="col-stock"><%= p.estoque %> un</td>
-
                                     <td>
                                         <span class="badge-status <%= statusClass %>">
                                             <span class="status-dot"></span> <%= statusLabel %>
                                         </span>
                                     </td>
-
                                     <td class="col-actions">
                                         <div class="actions-wrapper">
-                                            <a href="/produtos/editar/<%= p.id %>" class="action-icon" title="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
+                                            <a href="/produtos/editar/<%= p.id %>" class="action-icon" title="Editar"><i class="bi bi-pencil"></i></a>
                                             <form action="/produtos/excluir/<%= p.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Deseja excluir este produto?');">
-                                                <button type="submit" class="action-icon delete" title="Excluir">
-                                                    <i class="bi bi-trash3"></i>
-                                                </button>
+                                                <button type="submit" class="action-icon delete" title="Excluir"><i class="bi bi-trash3"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -153,9 +138,7 @@
                             <% }) %>
                         <% } else { %>
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 2rem; color: #777;">
-                                    Nenhum produto cadastrado.
-                                </td>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: #777;">Nenhum produto cadastrado.</td>
                             </tr>
                         <% } %>
                     </tbody>
@@ -167,7 +150,6 @@
                 <div class="pagination-controls" id="paginacaoContainer"></div>
             </div>
         </section>
-
     </main>
 
     <script>
@@ -250,6 +232,5 @@
 
         window.addEventListener('DOMContentLoaded', aplicarFiltros);
     </script>
-
 </body>
 </html>
