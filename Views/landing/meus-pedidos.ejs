@@ -19,9 +19,42 @@
         .container { max-width: 980px; margin: 2rem auto 4rem auto; padding: 0 2rem; }
         .order-card { background: #faf7f0; border-radius: 20px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid #e6dfd0; }
         .order-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ebe4d5; padding-bottom: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem; }
-        .status-pill { padding: 0.25rem 0.75rem; border-radius: 14px; font-size: 0.78rem; font-weight: 600; text-transform: capitalize; background: #fef3c7; color: #92400e; }
-        .status-pill.pago, .status-pill.enviado { background: #d1fae5; color: #065f46; }
+
+        /* Tags de Status */
+        .status-pill { padding: 0.28rem 0.85rem; border-radius: 14px; font-size: 0.78rem; font-weight: 600; text-transform: capitalize; display: inline-flex; align-items: center; gap: 0.35rem; }
+        .status-pill.pendente { background: #fef3c7; color: #92400e; }
+        .status-pill.pago { background: #dbeafe; color: #1e40af; }
+        .status-pill.enviado { background: #d1fae5; color: #065f46; }
         .status-pill.cancelado { background: #fee2e2; color: #991b1b; }
+
+        /* Rodapé do Card com botão no canto inferior direito */
+        .order-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed #e6dfd0;
+        }
+        .btn-excluir-pedido {
+            background-color: transparent;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+            border-radius: 14px;
+            padding: 0.38rem 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .btn-excluir-pedido:hover {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
     </style>
 </head>
 
@@ -50,14 +83,20 @@
             </div>
         <% } %>
 
+        <% if (typeof excluido !== 'undefined' && excluido) { %>
+            <div style="background:#fee2e2; color:#991b1b; padding:0.9rem 1.2rem; border-radius:14px; margin-bottom:1.2rem; font-size:0.86rem; font-weight:600;">
+                <i class="bi bi-trash3-fill"></i> Pedido excluído com sucesso!
+            </div>
+        <% } %>
+
         <% if (pedidos && pedidos.length > 0) { %>
             <% pedidos.forEach(pedido => { %>
-                <div class="order-card">
+                <div class="order-card" data-criado-em="<%= new Date(pedido.criado_em).toISOString() %>" data-status="<%= pedido.status %>">
                     <div class="order-top">
                         <div>
                             <strong>Pedido #<%= pedido.id %></strong>
                             <span style="font-size: 0.8rem; color: #666; margin-left: 0.8rem;">
-                                <%= new Date(pedido.criado_em).toLocaleDateString('pt-BR') %>
+                                <%= new Date(pedido.criado_em).toLocaleDateString('pt-BR') %> às <%= new Date(pedido.criado_em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %>
                             </span>
                         </div>
                         <div style="display:flex; align-items:center; gap:1rem;">
@@ -65,6 +104,7 @@
                             <strong><%= moeda(pedido.total) %></strong>
                         </div>
                     </div>
+
                     <% if (pedido.itens && pedido.itens.length > 0) { %>
                         <% pedido.itens.forEach(it => { %>
                             <div style="display:flex; justify-content:space-between; font-size:0.86rem; padding:0.35rem 0;">
@@ -73,6 +113,14 @@
                             </div>
                         <% }) %>
                     <% } %>
+
+                    <div class="order-footer">
+                        <form action="/meus-pedidos/excluir/<%= pedido.id %>" method="POST" style="margin:0;" onsubmit="return confirm('Tem certeza que deseja excluir o Pedido #<%= pedido.id %>?');">
+                            <button type="submit" class="btn-excluir-pedido" title="Excluir pedido">
+                                <i class="bi bi-trash3"></i> Excluir pedido
+                            </button>
+                        </form>
+                    </div>
                 </div>
             <% }) %>
         <% } else { %>
@@ -82,5 +130,37 @@
             </div>
         <% } %>
     </main>
+
+    <script>
+        function atualizarStatusPeloTempo() {
+            const agora = Date.now();
+            document.querySelectorAll('.order-card[data-criado-em]').forEach(card => {
+                const statusAtual = card.getAttribute('data-status');
+                if (statusAtual === 'cancelado') return;
+
+                const criadoEm = new Date(card.getAttribute('data-criado-em')).getTime();
+                const minutosPassados = (agora - criadoEm) / 60000;
+
+                let novoStatus = statusAtual;
+                if (minutosPassados >= 30) {
+                    novoStatus = 'enviado';
+                } else if (minutosPassados >= 20) {
+                    novoStatus = 'pago';
+                }
+
+                if (novoStatus !== statusAtual) {
+                    card.setAttribute('data-status', novoStatus);
+                    const badge = card.querySelector('.status-pill');
+                    if (badge) {
+                        badge.className = 'status-pill ' + novoStatus;
+                        badge.textContent = novoStatus;
+                    }
+                }
+            });
+        }
+
+        atualizarStatusPeloTempo();
+        setInterval(atualizarStatusPeloTempo, 15000);
+    </script>
 </body>
 </html>

@@ -12,7 +12,12 @@ async function query(text, params) {
     return pool.query(text, params);
 }
 
+function connect() {
+    return pool.connect();
+}
+
 module.exports = {
     query,
+    connect,
     pool
 };

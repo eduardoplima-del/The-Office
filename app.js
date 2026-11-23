@@ -359,11 +359,25 @@ app.post('/pedidos/finalizar', exigirLogin, async (req, res) => {
     }
 });
 
-// Histórico de Pedidos do Cliente (RN10)
+// Histórico de Pedidos do Cliente com progressão automática por tempo (RN08, RN10)
 app.get('/meus-pedidos', exigirLogin, async (req, res) => {
     const usuarioId = req.session.usuario.id;
 
     try {
+        // Atualiza automaticamente no PostgreSQL conforme o tempo decorrido:
+        // >= 20 min (1200s) -> 'pago' | >= 30 min (20 + 10 min = 1800s) -> 'enviado'
+        await BD.query(`
+            UPDATE pedidos
+            SET status = CASE
+                WHEN EXTRACT(EPOCH FROM (NOW() - criado_em)) >= 1800 THEN 'enviado'
+                WHEN EXTRACT(EPOCH FROM (NOW() - criado_em)) >= 1200 THEN 'pago'
+                ELSE status
+            END
+            WHERE usuario_id = $1
+              AND status IN ('pendente', 'pago')
+              AND EXTRACT(EPOCH FROM (NOW() - criado_em)) >= 1200
+        `, [usuarioId]);
+
         const pedidosRes = await BD.query(
             'SELECT * FROM pedidos WHERE usuario_id = $1 ORDER BY criado_em DESC',
             [usuarioId]
@@ -384,12 +398,69 @@ app.get('/meus-pedidos', exigirLogin, async (req, res) => {
 
         res.render('landing/meus-pedidos', {
             pedidos,
-            sucesso: req.query.sucesso || null
+            sucesso: req.query.sucesso || null,
+            excluido: req.query.excluido || null
         });
     } catch (erro) {
         console.error('Erro ao buscar pedidos do cliente:', erro);
         res.status(500).send('Erro ao carregar seus pedidos.');
     }
+});
+
+// Excluir Pedido do Cliente (Devolve estoque e remove do banco em transação)
+app.post('/meus-pedidos/excluir/:id', exigirLogin, async (req, res) => {
+    const pedidoId = parseInt(req.params.id, 10);
+    const usuarioId = req.session.usuario.id;
+
+    if (isNaN(pedidoId)) {
+        return res.redirect('/meus-pedidos');
+    }
+
+    const client = await BD.connect();
+    try {
+        await client.query('BEGIN');
+
+        const pedidoRes = await client.query(
+            'SELECT id, status FROM pedidos WHERE id = $1 AND usuario_id = $2 FOR UPDATE',
+            [pedidoId, usuarioId]
+        );
+
+        if (pedidoRes.rows.length > 0) {
+            const pedido = pedidoRes.rows[0];
+
+            // Se o pedido não estava cancelado, devolve os itens ao estoque
+            if (pedido.status !== 'cancelado') {
+                const itensRes = await client.query(
+                    'SELECT produto_id, quantidade FROM pedido_itens WHERE pedido_id = $1',
+                    [pedidoId]
+                );
+
+                for (const item of itensRes.rows) {
+                    await client.query(
+                        'UPDATE produtos SET estoque = estoque + $1 WHERE id = $2',
+                        [item.quantidade, item.produto_id]
+                    );
+                }
+            }
+
+            await client.query('DELETE FROM pedido_itens WHERE pedido_id = $1', [pedidoId]);
+            await client.query('DELETE FROM pedidos WHERE id = $1 AND usuario_id = $2', [pedidoId, usuarioId]);
+        }
+
+        await client.query('COMMIT');
+        res.redirect('/meus-pedidos?excluido=1');
+    } catch (erro) {
+        await client.query('ROLLBACK');
+        console.error('Erro ao excluir pedido:', erro);
+        res.redirect('/meus-pedidos');
+    } finally {
+        client.release();
+    }
+});
+
+// Alias de compatibilidade caso algum link antigo aponte para /pedidos/meus
+app.get('/pedidos/meus', exigirLogin, (req, res) => {
+    res.redirect('/meus-pedidos');
 });
 
 // ---------------------- PAINEL ADMINISTRATIVO (DASHBOARD) ----------------------
@@ -471,7 +542,7 @@ const TEMPLATE_EDITAR_PRODUTO = `<!DOCTYPE html>
                     <input type="text" placeholder="Buscar na loja..." disabled>
                 </div>
                 <div class="header-icons">
-                    <a href="/dashboard" title="Perfil Admin"><i class="bi bi-person"></i></a>
+                    <a href="/meus-pedidos" title="Meus Pedidos"><i class="bi bi-person"></i></a>
                     <a href="/carrinho" class="cart-btn" title="Carrinho">
                         <i class="bi bi-cart3"></i>
                         <% if (typeof qtdCarrinho !== 'undefined' && qtdCarrinho > 0) { %>
